@@ -1,12 +1,15 @@
 .homeWrapper {
-    height: 100%;
+    width: 100%;
+    height: 100vh;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 
     .sections {
         width: 100%;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 84px);
         position: relative;
-        top: 70px;
+        top: 84px;
         background-color: white;
         scroll-behavior: smooth;
         scroll-snap-type: y mandatory;
@@ -15,9 +18,173 @@
         }
 
         > * {
-            width: 100vw;
-            height: calc(100vh - 70px);
+            width: 95%;
+            // height: calc(100vh - 84px);
             scroll-snap-align: start;
+            margin-inline: 46px;
+        }
+    }
+}
+
+.mainWrapper {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+
+    .left {
+        display: flex;
+        flex-direction: column;
+        width: 25%;
+        max-width: 300px;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .leftTop {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        width: 100%;
+        height: 175px;
+        border-radius: 15px;
+        background-color: #36416a;
+        margin-bottom: 30px;
+        padding: 30px;
+        color: white;
+        box-sizing: border-box;
+    }
+
+    .leftTopTitle {
+        font-weight: 500;
+        font-size: 38.5865px;
+        line-height: 50px;
+    }
+
+    .leftTopDescription {
+        font-weight: 700;
+        font-size: 20.5774px;
+        line-height: 147.2%;
+    }
+
+    .leftBottom {
+        display: flex;
+        width: 100%;
+        min-height: 200px;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0px 0px 17.5051px rgba(0, 0, 0, 0.15);
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 24px;
+        box-sizing: border-box;
+        // overflow-y: scroll;
+
+        .categoryBox {
+            display: flex;
+            height: 40px;
+            border-radius: 25px;
+            width: fit-content;
+            padding-inline: 15px;
+            padding-block: 3px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            flex-basis: auto;
+            max-width: 50%;
+
+            .boxText {
+                font-weight: 400;
+                font-size: 20.8875px;
+                line-height: 147.2%;
+            }
+        }
+
+        .categorySelected {
+            color: white;
+            background-color: #36416a;
+        }
+
+        .categoryUnselected {
+            color: black;
+            background-color: #e1e3e9;
+        }
+    }
+
+    .right {
+        width: calc(100% - 300px);
+        // width: 1100px;
+        // max-width: 76%;
+        border-radius: 12px;
+        box-shadow: 0px 0px 17.5051px rgba(0, 0, 0, 0.15);
+
+        .rightTop {
+            display: flex;
+            align-items: center;
+            padding-inline: 24px;
+            margin-bottom: 40px;
+            width: 100%;
+            height: 68px;
+            border: 3px solid rgba(54, 65, 106, 0.35);
+            border-radius: 8px;
+            box-sizing: border-box;
+            position: relative;
+
+            .suggestionCount {
+                font-weight: 700;
+                font-size: 22.0776px;
+                line-height: 147.2%;
+                margin-right: 24px;
+            }
+
+            .sortContainer {
+                font-weight: 500;
+                font-size: 17.7698px;
+                line-height: 147.2%;
+                color: #8b8b8b;
+                margin-right: 24px;
+            }
+
+            .sortContainer > select {
+                border: none;
+                outline: none;
+                font-weight: 700;
+                font-size: 22.0776px;
+                line-height: 147.2%;
+                margin-left: 1rem;
+            }
+
+            .sortContainer > select:focus {
+                border: none;
+                outline: none;
+            }
+
+            .addProductButton {
+                position: absolute;
+                right: 20px;
+                background: #36416a;
+                border: none;
+                border-radius: 7px;
+                color: white;
+                text-align: center;
+                font-weight: 500;
+                font-size: 21.9186px;
+                line-height: 147.2%;
+                width: 200px;
+                height: 46px;
+                cursor: pointer;
+            }
+        }
+
+        .productListContainer {
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 300px);
+            height: 100%;
+            background-color: antiquewhite;
         }
     }
 }
