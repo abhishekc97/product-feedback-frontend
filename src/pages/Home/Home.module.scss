@@ -1,0 +1,23 @@
+.homeWrapper {
+    height: 100%;
+    margin: 0 auto;
+
+    .sections {
+        width: 100%;
+        height: calc(100vh - 70px);
+        position: relative;
+        top: 70px;
+        background-color: white;
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        > * {
+            width: 100vw;
+            height: calc(100vh - 70px);
+            scroll-snap-align: start;
+        }
+    }
+}
