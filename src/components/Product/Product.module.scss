@@ -1,0 +1,48 @@
+.productWrapper {
+    .productDetailsTop {
+        .left {
+            .productLogo {
+            }
+        }
+
+        .center {
+            .centerTop {
+            }
+
+            .centerMiddle {
+            }
+
+            .centerBottom {
+                .productCategories {
+                }
+                .categoryBox {
+                }
+                .commentButton {
+                }
+                .commentLogo {
+                }
+            }
+        }
+        .right {
+            .upvoteButton {
+            }
+            .rightBottom {
+                .editButton {
+                }
+                .commentCount {
+                }
+            }
+        }
+    }
+
+    .commentDropDownContainer {
+        .commentInputBox {
+            .sendButton {
+            }
+        }
+        .commentsContainer {
+            .commentText {
+            }
+        }
+    }
+}
