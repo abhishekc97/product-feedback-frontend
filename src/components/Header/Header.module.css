@@ -1,3 +1,18 @@
 .headerWrapper {
-    height: 70px;
+    display: flex;
+    height: 84px;
+    background-color: #36416a;
+    color: white;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    align-items: center;
+    padding: 0px 47px;
+}
+
+.headerTitle {
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 36px;
 }

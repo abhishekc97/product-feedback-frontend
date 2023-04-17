@@ -78,3 +78,15 @@ export async function upvoteProduct(id) {
         console.log(error);
     }
 }
+
+export async function getAllCategories() {
+    try {
+        const reqUrl = `${URL}/api/categories/all`;
+        const result = await axios.get(reqUrl);
+        if (result) {
+            return result.data;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
