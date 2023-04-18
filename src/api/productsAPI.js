@@ -5,7 +5,7 @@ const URL = process.env.REACT_APP_BACKEND_URL;
 export async function createProduct(body) {
     try {
         const reqUrl = `${URL}/api/products/create-new`;
-        const result = await axios.post(reqUrl, body);
+        const result = await axios.post(reqUrl, { body });
         if (result) {
             return result;
         }
@@ -44,7 +44,7 @@ export async function getProductById(id) {
 export async function updateProductDetails(id, body) {
     try {
         const reqUrl = `${URL}/api/products/update/${id}`;
-        const result = await axios.put(reqUrl, body);
+        const result = await axios.put(reqUrl, { body });
         if (result) {
             return result.data;
         }
@@ -57,7 +57,7 @@ export async function updateProductDetails(id, body) {
 export async function commentOnProduct(id, comment) {
     try {
         const reqUrl = `${URL}/api/products/comment/${id}`;
-        const result = await axios.post(reqUrl, comment);
+        const result = await axios.post(reqUrl, { comment });
         if (result) {
             return result.data;
         }
@@ -79,6 +79,7 @@ export async function upvoteProduct(id) {
     }
 }
 
+// GET request to get list of categories
 export async function getAllCategories() {
     try {
         const reqUrl = `${URL}/api/categories/all`;

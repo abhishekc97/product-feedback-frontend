@@ -1,8 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import {
+    getProductById,
+    commentOnProduct,
+    upvoteProduct,
+} from "../../api/productsAPI";
 import styles from "./Product.module.scss";
 
 export default function Product({ product }) {
+    const productId = product._id;
+    const [productLocal, setProductLocal] = useState(product);
     const [isOpenCommentsDropdown, setIsOpenCommentsDropdown] = useState(false);
+
+    const [newComment, setNewComment] = useState("");
+    const scrollRef = useRef(null);
+
+    async function getProduct() {
+        const result = await getProductById(productId);
+        setProductLocal(result);
+    }
+
+    useEffect(() => {
+        setProductLocal(product);
+    }, []);
+
+    useEffect(() => {
+        getProduct(productId);
+    }, [product]);
+
+    async function handleSubmitComment() {
+        const result = await commentOnProduct(productId, newComment);
+        setProductLocal(result);
+        setNewComment("");
+        scrollToLatest();
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === "Enter") {
+            handleSubmitComment();
+        }
+    }
+
+    function scrollToLatest() {
+        scrollRef.current?.lastChild.scrollIntoView({ behavior: "smooth" });
+    }
+
+    async function handleUpvoteProduct() {
+        const result = await upvoteProduct(productId);
+        setProductLocal(result);
+    }
+
     return (
         <div className={styles.productWrapper}>
             <div className={styles.productDetailsTop}>
@@ -15,15 +61,26 @@ export default function Product({ product }) {
                 </div>
                 <div className={styles.center}>
                     <div className={styles.centerTop}>
-                        <h3>Product {product.name}</h3>
+                        <span>{productLocal.name}</span>
                     </div>
                     <div className={styles.centerMiddle}>
-                        {product.description}
+                        <span>{productLocal.description}</span>
                     </div>
-                    <div className={styles.centerBottom}>
+                    <div
+                        className={styles.centerBottom}
+                        style={
+                            productLocal.category.length > 4
+                                ? {
+                                      flexDirection: "column",
+                                      gap: "10px",
+                                      alignItems: "flex-start",
+                                  }
+                                : { flexDirection: "row" }
+                        }
+                    >
                         <div className={styles.productCategories}>
-                            {product.category &&
-                                product.category.map((category) => (
+                            {productLocal.category &&
+                                productLocal.category.map((category) => (
                                     <div
                                         className={styles.categoryBox}
                                         key={category}
@@ -46,23 +103,53 @@ export default function Product({ product }) {
                     </div>
                 </div>
                 <div className={styles.right}>
-                    <div className={styles.upvoteButton}></div>
-                    <div className={styles.rightBottom}>
-                        <div className={styles.editButton}>Edit</div>
-                        <div className={styles.commentCount}></div>
+                    <div className={styles.rightInner}>
+                        <div
+                            className={styles.upvoteButton}
+                            onClick={() => handleUpvoteProduct()}
+                        >
+                            <div className={styles.upvoteLogo}></div>
+                            <div className={styles.upvoteText}>
+                                {productLocal.upvoteCount}
+                            </div>
+                        </div>
+                        <div className={styles.rightInnerBottom}>
+                            <div className={styles.editButton}>
+                                <span>Edit</span>
+                            </div>
+                            <div className={styles.commentCount}>
+                                {productLocal.comments.length}
+                                <div className={styles.commentCountLogo}></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             {isOpenCommentsDropdown && (
                 <div className={styles.commentDropDownContainer}>
-                    <div className={styles.commentInputBox}>
-                        <input type="text" placeholder="Add a comment..." />
-                        <div className={styles.sendButton}></div>
+                    <div className={styles.commentBox}>
+                        <input
+                            type="text"
+                            placeholder="Add a comment..."
+                            className={styles.commentInputBox}
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                        />
+                        <button
+                            className={styles.sendButton}
+                            onClick={() => {
+                                handleSubmitComment();
+                            }}
+                        ></button>
                     </div>
                     <div className={styles.commentsContainer}>
-                        {product.comments.map((comment) => (
-                            <div className={styles.commentText} key={comment}>
-                                {comment}
+                        {productLocal.comments.map((comment, index) => (
+                            <div className={styles.commentRow} key={index}>
+                                <div className={styles.commentEllipse}></div>
+                                <div className={styles.commentText}>
+                                    {comment}
+                                </div>
                             </div>
                         ))}
                     </div>

@@ -18,7 +18,7 @@ export default function Home() {
 }
 
 function Main() {
-    const [categoryFilter, setCategoryFilter] = useState("category1");
+    const [categoryFilter, setCategoryFilter] = useState("all");
     const [categoryList, setCategoryList] = useState([]);
     const [productsList, setProductsList] = useState([]);
 
@@ -43,12 +43,6 @@ function Main() {
     function handleFilterChange(categoryName) {
         setCategoryFilter(categoryName);
     }
-
-    useEffect(() => {
-        console.log("categoryFilter", categoryFilter);
-        console.log("categoryList ", categoryList);
-        console.log("productsList ", productsList);
-    }, [categoryList, productsList]);
 
     return (
         <div className={styles.mainWrapper} id="main">
@@ -93,7 +87,9 @@ function Main() {
             </div>
             <div className={styles.right}>
                 <div className={styles.rightTop}>
-                    <div className={styles.suggestionCount}>10 Suggestions</div>
+                    <div className={styles.suggestionCount}>
+                        {productsList.length} Suggestions
+                    </div>
                     <div className={styles.sortContainer}>
                         <span>Sort By:</span>
                         <select name="sort" id="sort" defaultValue="default">
@@ -124,8 +120,11 @@ function Main() {
                 </div>
                 <div className={styles.productListContainer}>
                     {productsList &&
-                        productsList.map((product) => (
-                            <div className={styles.productBoxWrapper}>
+                        productsList.map((product, index) => (
+                            <div
+                                className={styles.productBoxWrapper}
+                                key={index}
+                            >
                                 <Product key={product._id} product={product} />
                             </div>
                         ))}
