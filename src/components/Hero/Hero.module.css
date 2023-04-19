@@ -1,10 +1,10 @@
 .heroWrapper {
     display: flex;
-    /* height: 600px; */
     height: calc(100vh - 200px);
     width: 100%;
     align-items: center;
     justify-content: center;
+    font-family: "DM Sans";
 }
 
 .left {

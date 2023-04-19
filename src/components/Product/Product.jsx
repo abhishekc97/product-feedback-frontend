@@ -66,18 +66,7 @@ export default function Product({ product }) {
                     <div className={styles.centerMiddle}>
                         <span>{productLocal.description}</span>
                     </div>
-                    <div
-                        className={styles.centerBottom}
-                        style={
-                            productLocal.category.length > 4
-                                ? {
-                                      flexDirection: "column",
-                                      gap: "10px",
-                                      alignItems: "flex-start",
-                                  }
-                                : { flexDirection: "row" }
-                        }
-                    >
+                    <div className={styles.centerBottom}>
                         <div className={styles.productCategories}>
                             {productLocal.category &&
                                 productLocal.category.map((category) => (

@@ -1,9 +1,11 @@
-import styles from "./Home.module.scss";
 import { useEffect, useState } from "react";
 import Hero from "../../components/Hero/Hero";
 import Header from "../../components/Header/Header";
 import { getAllCategories, getProductsByCategory } from "../../api/productsAPI";
 import Product from "../../components/Product/Product";
+import AddProductModal from "../../components/AddProductModal/AddProductModal";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "./Home.module.scss";
 
 export default function Home() {
     return (
@@ -21,6 +23,7 @@ function Main() {
     const [categoryFilter, setCategoryFilter] = useState("all");
     const [categoryList, setCategoryList] = useState([]);
     const [productsList, setProductsList] = useState([]);
+    const [showAddProductModal, setShowAddProductModal] = useState(false);
 
     async function getCategories() {
         const list = await getAllCategories();
@@ -114,9 +117,20 @@ function Main() {
                             </option>
                         </select>
                     </div>
-                    <button className={styles.addProductButton}>
+                    <button
+                        className={styles.addProductButton}
+                        onClick={() => {
+                            setShowAddProductModal(true);
+                        }}
+                    >
                         + Add Product
                     </button>
+                    {showAddProductModal && (
+                        <AddProductModal
+                            show={showAddProductModal}
+                            onClose={() => setShowAddProductModal(false)}
+                        />
+                    )}
                 </div>
                 <div className={styles.productListContainer}>
                     {productsList &&
