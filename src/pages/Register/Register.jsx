@@ -1,5 +1,6 @@
 import styles from "./Register.module.scss";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Register() {
     const [formData, setFormData] = useState({
@@ -152,7 +153,7 @@ export default function Register() {
 
                         <div className={styles.moreActionsContainer}>
                             <span>Already have an account?</span>
-                            <a href="/login">Log In</a>
+                            <Link to="/login">Log In</Link>
                         </div>
                         <button type="submit" className={styles.registerButton}>
                             Signup

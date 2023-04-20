@@ -10,9 +10,87 @@
     align-items: center;
     padding: 0px 47px;
 }
+.headerContainer {
+    display: flex;
+    position: relative;
+    width: 100%;
+    align-items: center;
+}
 
-.headerTitle {
+.mainPageLink {
+    text-decoration: none;
+    color: #ffffff;
     font-weight: 700;
     font-size: 1.7rem;
     line-height: 36px;
+}
+
+.textStyle {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 31px;
+}
+
+.loginButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    box-sizing: border-box;
+    margin-right: 5px;
+    right: 150px;
+    border: none;
+    width: 100px;
+    height: 45px;
+    background: none;
+}
+
+.signupButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0px;
+    width: 135px;
+    height: 45px;
+    border: 1.7px solid #ffffff;
+    border-radius: 8px;
+    background: none;
+}
+
+.logoutButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    position: absolute;
+    right: 150px;
+    width: 135px;
+    height: 45px;
+    border: 1.7px solid #ffffff;
+    border-radius: 8px;
+    background: none;
+}
+
+.profileBox {
+    display: flex;
+    width: 135px;
+    height: 45px;
+    border: none;
+    position: absolute;
+    right: 0px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.show {
+    display: flex;
+}
+
+.hide {
+    display: none;
 }

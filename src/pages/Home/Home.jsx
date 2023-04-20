@@ -4,26 +4,45 @@ import Header from "../../components/Header/Header";
 import { getAllCategories, getProductsByCategory } from "../../api/productsAPI";
 import Product from "../../components/Product/Product";
 import AddProductModal from "../../components/AddProductModal/AddProductModal";
+import RegisterModal from "../../components/RegisterModal/RegisterModal";
+import LoginModal from "../../components/LoginModal/LoginModal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Home.module.scss";
 
 export default function Home() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
         <div className={styles.homeWrapper}>
-            <Header />
+            <Header isLoggedIn={isLoggedIn} />
             <div className={styles.sections}>
                 <Hero />
-                <Main />
+                <Main isLoggedIn={isLoggedIn} />
             </div>
         </div>
     );
 }
 
-function Main() {
+function Main({ isLoggedIn }) {
     const [categoryFilter, setCategoryFilter] = useState("all");
     const [categoryList, setCategoryList] = useState([]);
     const [productsList, setProductsList] = useState([]);
     const [showAddProductModal, setShowAddProductModal] = useState(false);
+
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+    function handleOpenAddProductModal() {
+        if (!isLoggedIn) {
+            setShowRegisterModal(true);
+        } else if (isLoggedIn) {
+            setShowAddProductModal(true);
+        }
+    }
+
+    function handleOpenLoginModal() {
+        setShowRegisterModal(false);
+        setShowLoginModal(true);
+    }
 
     async function getCategories() {
         const list = await getAllCategories();
@@ -45,6 +64,41 @@ function Main() {
 
     function handleFilterChange(categoryName) {
         setCategoryFilter(categoryName);
+    }
+    const [sort, setSort] = useState("default");
+
+    function handleSortChange(e) {
+        const sortingValue = e.target.value;
+        let list = productsList;
+
+        switch (sortingValue) {
+            case "upvoteAsc":
+                setSort("upvoteAsc");
+                list = list.sort((a, b) => a.upvoteCount - b.upvoteCount);
+                setProductsList(list);
+                break;
+            case "upvoteDesc":
+                setSort("upvoteDesc");
+                list = list.sort((a, b) => b.upvoteCount - a.upvoteCount);
+                setProductsList(list);
+                break;
+            case "commentAsc":
+                setSort("commentAsc");
+                list = list.sort(
+                    (a, b) => a.comments.length - b.comments.length
+                );
+                setProductsList(list);
+                break;
+            case "commentDesc":
+                setSort("commentDesc");
+                list = list.sort(
+                    (a, b) => b.comments.length - a.comments.length
+                );
+                setProductsList(list);
+                break;
+            default:
+                break;
+        }
     }
 
     return (
@@ -95,32 +149,29 @@ function Main() {
                     </div>
                     <div className={styles.sortContainer}>
                         <span>Sort By:</span>
-                        <select name="sort" id="sort" defaultValue="default">
-                            <option
-                                value="default"
-                                disabled
-                                className={styles.selectDropdownOption}
-                            >
+                        <select
+                            name="sort"
+                            id="sort"
+                            value={sort}
+                            onChange={handleSortChange}
+                        >
+                            <option value="default" disabled>
                                 Select
                             </option>
-                            <option
-                                value="upvotes"
-                                className={styles.selectDropdownOption}
-                            >
-                                Upvotes
+                            <option value="upvoteAsc">Upvotes (Asc)</option>
+                            <option value="upvoteDesc">Upvotes (Desc)</option>
+                            <option value="commentAsc">
+                                Comment count (Asc)
                             </option>
-                            <option
-                                value="comments"
-                                className={styles.selectDropdownOption}
-                            >
-                                Comments
+                            <option value="commentDesc">
+                                Comment count (Desc)
                             </option>
                         </select>
                     </div>
                     <button
                         className={styles.addProductButton}
                         onClick={() => {
-                            setShowAddProductModal(true);
+                            handleOpenAddProductModal();
                         }}
                     >
                         + Add Product
@@ -131,6 +182,21 @@ function Main() {
                             onClose={() => setShowAddProductModal(false)}
                         />
                     )}
+                    {showRegisterModal && (
+                        <RegisterModal
+                            show={showRegisterModal}
+                            redirectToLogin={() => {
+                                handleOpenLoginModal();
+                            }}
+                            onClose={() => setShowRegisterModal(false)}
+                        />
+                    )}
+                    {showLoginModal && (
+                        <LoginModal
+                            show={showLoginModal}
+                            onClose={() => setShowLoginModal(false)}
+                        />
+                    )}
                 </div>
                 <div className={styles.productListContainer}>
                     {productsList &&
@@ -139,7 +205,11 @@ function Main() {
                                 className={styles.productBoxWrapper}
                                 key={index}
                             >
-                                <Product key={product._id} product={product} />
+                                <Product
+                                    key={product._id}
+                                    isLoggedIn={isLoggedIn}
+                                    product={product}
+                                />
                             </div>
                         ))}
                 </div>

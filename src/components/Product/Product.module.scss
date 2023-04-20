@@ -185,6 +185,13 @@
                         font-size: 22px;
                     }
 
+                    .show {
+                        display: block;
+                    }
+
+                    .hide {
+                        display: none;
+                    }
                     .commentCount {
                         display: flex;
                         color: #000000;

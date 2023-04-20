@@ -6,7 +6,7 @@ import {
 } from "../../api/productsAPI";
 import styles from "./Product.module.scss";
 
-export default function Product({ product }) {
+export default function Product({ product, isLoggedIn }) {
     const productId = product._id;
     const [productLocal, setProductLocal] = useState(product);
     const [isOpenCommentsDropdown, setIsOpenCommentsDropdown] = useState(false);
@@ -103,7 +103,11 @@ export default function Product({ product }) {
                             </div>
                         </div>
                         <div className={styles.rightInnerBottom}>
-                            <div className={styles.editButton}>
+                            <div
+                                className={`${styles.editButton} ${
+                                    isLoggedIn ? styles.show : styles.hide
+                                }`}
+                            >
                                 <span>Edit</span>
                             </div>
                             <div className={styles.commentCount}>

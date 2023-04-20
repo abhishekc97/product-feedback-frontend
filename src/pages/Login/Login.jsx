@@ -1,5 +1,6 @@
 import styles from "./Login.module.scss";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Login() {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -99,7 +100,7 @@ export default function Login() {
                         )}
                         <div className={styles.moreActionsContainer}>
                             <span>Don’t have an account?</span>
-                            <a href="/register">Sign up</a>
+                            <Link to="/register">Sign up</Link>
                         </div>
                         <button type="submit" className={styles.loginButton}>
                             Log In
