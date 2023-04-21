@@ -2,8 +2,15 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styles from "./LoginModal.module.css";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/userOperationsAPI";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function LoginModal({ show, onClose }) {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -43,14 +50,28 @@ export default function LoginModal({ show, onClose }) {
 
     async function handleLogin(e) {
         e.preventDefault();
-        const isValid = validateForm();
-        if (isValid) {
+        const isValidForm = validateForm();
+        if (isValidForm) {
             // api to login
-            console.log("valid");
+            try {
+                let response = await loginUser(formData);
+                if (response.status === 200) {
+                    localStorage.setItem("token", response.data.token);
+                    setTimeout(() => {
+                        dispatch({ type: "login" });
+                        navigate("/");
+                        onClose();
+                    }, 1500);
+                }
+            } catch (error) {
+                toast.error("Could not login", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
         }
-        // redirect to /home
     }
 
+    // MUI style
     const style = {
         position: "absolute",
         top: "50%",

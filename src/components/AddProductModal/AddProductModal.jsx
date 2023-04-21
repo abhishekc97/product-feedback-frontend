@@ -1,13 +1,16 @@
 import { useState } from "react";
+import { createProduct } from "../../api/productsAPI";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styles from "./AddProductModal.module.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function AddProductModal({ show, onClose }) {
+export default function AddProductModal({ show, onClose, handleProductAdded }) {
     const [formData, setFormData] = useState({
         name: "",
         category: "",
-        logoURL: "",
+        logoImageURL: "",
         productLink: "",
         description: "",
     });
@@ -15,7 +18,7 @@ export default function AddProductModal({ show, onClose }) {
     const [formErrors, setFormErrors] = useState({
         name: "",
         category: "",
-        logoURL: "",
+        logoImageURL: "",
         productLink: "",
         description: "",
     });
@@ -35,14 +38,14 @@ export default function AddProductModal({ show, onClose }) {
         if (!formData.category.trim()) {
             errors.category = "Category cannot be empty";
         }
-        if (!formData.logoURL.trim()) {
-            errors.logoURL = "Logo URL cannot be empty";
+        if (!formData.logoImageURL.trim()) {
+            errors.logoImageURL = "Logo URL cannot be empty";
         }
         if (!formData.productLink.trim()) {
             errors.productLink = "Product link cannot be empty";
         }
         if (!formData.description.trim()) {
-            errors.description = "dDescription cannot be empty";
+            errors.description = "Description cannot be empty";
         }
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
@@ -52,11 +55,34 @@ export default function AddProductModal({ show, onClose }) {
         e.preventDefault();
         const isValid = validateForm();
         if (isValid) {
-            // api to login
-            console.log("valid");
+            // make the API call
+            try {
+                let response = await createProduct(formData);
+                if (response.status === 200) {
+                    setTimeout(() => {
+                        handleProductAdded();
+                        toastSuccessAlert();
+                    }, 1500);
+                    onClose();
+                }
+            } catch (error) {
+                toastFailureAlert();
+            }
         }
-        // redirect to /home
     }
+    function toastSuccessAlert() {
+        toast.success("Product added!", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
+    }
+
+    function toastFailureAlert() {
+        toast.error("Could not add the new product.", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
+    }
+
+    // MUI style
     const style = {
         position: "absolute",
         top: "50%",
@@ -125,15 +151,15 @@ export default function AddProductModal({ show, onClose }) {
                                     type="text"
                                     placeholder="Add logo url"
                                     className={styles.inputBox}
-                                    name="logoURL"
-                                    value={formData.logoURL}
+                                    name="logoImageURL"
+                                    value={formData.logoImageURL}
                                     onChange={handleInputChange}
                                 />
-                                {formErrors.logoURL && (
+                                {formErrors.logoImageURL && (
                                     <span
                                         className={styles.formValidationError}
                                     >
-                                        {formErrors.logoURL}
+                                        {formErrors.logoImageURL}
                                     </span>
                                 )}
                             </div>

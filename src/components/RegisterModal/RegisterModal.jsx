@@ -2,8 +2,17 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import styles from "./RegisterModal.module.css";
+import { registerUser } from "../../api/userOperationsAPI";
+import { toast } from "react-toastify";
 
-export default function RegisterModal({ show, redirectToLogin, onClose }) {
+export default function RegisterModal({
+    show,
+    redirectToLogin,
+    onClose,
+    handleRegisterSuccess,
+}) {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -17,8 +26,6 @@ export default function RegisterModal({ show, redirectToLogin, onClose }) {
         mobile: "",
         password: "",
     });
-
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     function handleInputChange(event) {
         setFormData({
@@ -57,14 +64,26 @@ export default function RegisterModal({ show, redirectToLogin, onClose }) {
 
     async function handleRegister(e) {
         e.preventDefault();
-        const isValid = validateForm();
-        if (isValid) {
+        const isValidForm = validateForm();
+        if (isValidForm) {
             // api to register
-            console.log("valid");
+            try {
+                let response = await registerUser(formData);
+                if (response.status === 200) {
+                    localStorage.setItem("token", response.data.token);
+                    setTimeout(() => {
+                        handleRegisterSuccess();
+                    }, 1500);
+                }
+            } catch (error) {
+                toast.error("Could not register.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
         }
-        // redirect to /home
     }
 
+    // MUI style
     const style = {
         position: "absolute",
         top: "50%",
