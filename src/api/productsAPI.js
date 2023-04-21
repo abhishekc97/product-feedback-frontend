@@ -1,13 +1,26 @@
 import axios from "axios";
 const URL = process.env.REACT_APP_BACKEND_URL;
 
-// POST request API to make a new product
+// POST request API to CREATE a new product
 export async function createProduct(body) {
     try {
         const reqUrl = `${URL}/api/products/create-new`;
-        const result = await axios.post(reqUrl, { body });
+        const result = await axios.post(reqUrl, body);
         if (result) {
             return result;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// PUT Request API to UPDATE a products details
+export async function updateProductDetails(id, body) {
+    try {
+        const reqUrl = `${URL}/api/products/update/${id}`;
+        const result = await axios.put(reqUrl, body);
+        if (result) {
+            return result.data;
         }
     } catch (error) {
         console.log(error);
@@ -32,19 +45,6 @@ export async function getProductById(id) {
     try {
         const reqUrl = `${URL}/api/products/${id}`;
         const result = await axios.get(reqUrl);
-        if (result) {
-            return result.data;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-// PUT Request API to update a products details
-export async function updateProductDetails(id, body) {
-    try {
-        const reqUrl = `${URL}/api/products/update/${id}`;
-        const result = await axios.put(reqUrl, { body });
         if (result) {
             return result.data;
         }
@@ -79,7 +79,7 @@ export async function upvoteProduct(id) {
     }
 }
 
-// GET request to get list of categories
+// GET request to get list of categories from categories route of backend
 export async function getAllCategories() {
     try {
         const reqUrl = `${URL}/api/categories/all`;
