@@ -5,14 +5,20 @@ import {
     upvoteProduct,
 } from "../../api/productsAPI";
 import styles from "./Product.module.scss";
+import EditProductModal from "../EditProductModal/EditProductModal";
 
-export default function Product({ product, isLoggedIn }) {
+export default function Product({
+    product,
+    isAuthenticated,
+    handleProductUpdated,
+}) {
     const productId = product._id;
     const [productLocal, setProductLocal] = useState(product);
     const [isOpenCommentsDropdown, setIsOpenCommentsDropdown] = useState(false);
 
     const [newComment, setNewComment] = useState("");
     const scrollRef = useRef(null);
+    const [showEditProductModal, setShowEditProductModal] = useState(false);
 
     async function getProduct() {
         const result = await getProductById(productId);
@@ -105,11 +111,22 @@ export default function Product({ product, isLoggedIn }) {
                         <div className={styles.rightInnerBottom}>
                             <div
                                 className={`${styles.editButton} ${
-                                    isLoggedIn ? styles.show : styles.hide
+                                    isAuthenticated ? styles.show : styles.hide
                                 }`}
+                                onClick={() => setShowEditProductModal(true)}
                             >
                                 <span>Edit</span>
                             </div>
+                            {showEditProductModal && (
+                                <EditProductModal
+                                    product={product}
+                                    show={showEditProductModal}
+                                    onClose={() =>
+                                        setShowEditProductModal(false)
+                                    }
+                                    handleProductUpdated={handleProductUpdated}
+                                />
+                            )}
                             <div className={styles.commentCount}>
                                 {productLocal.comments.length}
                                 <div className={styles.commentCountLogo}></div>

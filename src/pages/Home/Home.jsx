@@ -6,23 +6,24 @@ import Product from "../../components/Product/Product";
 import AddProductModal from "../../components/AddProductModal/AddProductModal";
 import RegisterModal from "../../components/RegisterModal/RegisterModal";
 import LoginModal from "../../components/LoginModal/LoginModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./Home.module.scss";
 
-export default function Home() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function Home({ isAuthenticated }) {
     return (
         <div className={styles.homeWrapper}>
-            <Header isLoggedIn={isLoggedIn} />
+            <Header isAuthenticated={isAuthenticated} />
             <div className={styles.sections}>
                 <Hero />
-                <Main isLoggedIn={isLoggedIn} />
+                <Main isAuthenticated={isAuthenticated} />
             </div>
         </div>
     );
 }
 
-function Main({ isLoggedIn }) {
+function Main({ isAuthenticated }) {
     const [categoryFilter, setCategoryFilter] = useState("all");
     const [categoryList, setCategoryList] = useState([]);
     const [productsList, setProductsList] = useState([]);
@@ -31,10 +32,12 @@ function Main({ isLoggedIn }) {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showRegisterModal, setShowRegisterModal] = useState(false);
 
+    const [sort, setSort] = useState("default");
+
     function handleOpenAddProductModal() {
-        if (!isLoggedIn) {
+        if (!isAuthenticated) {
             setShowRegisterModal(true);
-        } else if (isLoggedIn) {
+        } else if (isAuthenticated) {
             setShowAddProductModal(true);
         }
     }
@@ -42,6 +45,13 @@ function Main({ isLoggedIn }) {
     function handleOpenLoginModal() {
         setShowRegisterModal(false);
         setShowLoginModal(true);
+    }
+
+    function handleRegisterSuccess() {
+        toast("Product added!", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        handleOpenLoginModal();
     }
 
     async function getCategories() {
@@ -65,7 +75,6 @@ function Main({ isLoggedIn }) {
     function handleFilterChange(categoryName) {
         setCategoryFilter(categoryName);
     }
-    const [sort, setSort] = useState("default");
 
     function handleSortChange(e) {
         const sortingValue = e.target.value;
@@ -99,6 +108,11 @@ function Main({ isLoggedIn }) {
             default:
                 break;
         }
+    }
+
+    function handleProductAddAndUpdate() {
+        getProductList();
+        getCategories();
     }
 
     return (
@@ -145,7 +159,7 @@ function Main({ isLoggedIn }) {
             <div className={styles.right}>
                 <div className={styles.rightTop}>
                     <div className={styles.suggestionCount}>
-                        {productsList.length} Suggestions
+                        {productsList?.length} Suggestions
                     </div>
                     <div className={styles.sortContainer}>
                         <span>Sort By:</span>
@@ -180,6 +194,9 @@ function Main({ isLoggedIn }) {
                         <AddProductModal
                             show={showAddProductModal}
                             onClose={() => setShowAddProductModal(false)}
+                            handleProductAddAndUpdate={
+                                handleProductAddAndUpdate
+                            }
                         />
                     )}
                     {showRegisterModal && (
@@ -188,6 +205,7 @@ function Main({ isLoggedIn }) {
                             redirectToLogin={() => {
                                 handleOpenLoginModal();
                             }}
+                            handleRegisterSuccess={handleRegisterSuccess}
                             onClose={() => setShowRegisterModal(false)}
                         />
                     )}
@@ -207,13 +225,17 @@ function Main({ isLoggedIn }) {
                             >
                                 <Product
                                     key={product._id}
-                                    isLoggedIn={isLoggedIn}
+                                    isAuthenticated={isAuthenticated}
                                     product={product}
+                                    handleProductAddAndUpdate={
+                                        handleProductAddAndUpdate
+                                    }
                                 />
                             </div>
                         ))}
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }

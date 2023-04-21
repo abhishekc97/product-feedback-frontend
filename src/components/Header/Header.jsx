@@ -1,9 +1,16 @@
 import styles from "./Header.module.css";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-export default function Header({ isLoggedIn }) {
+export default function Header({ isAuthenticated }) {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     function handleLogout() {
-        console.log("log out");
+        dispatch({ type: "logout" });
+        localStorage.removeItem("token");
+        navigate("/");
     }
 
     return (
@@ -15,7 +22,7 @@ export default function Header({ isLoggedIn }) {
                 <Link
                     to="/login"
                     className={`${styles.loginButton} ${styles.textStyle} ${
-                        isLoggedIn ? styles.hide : styles.show
+                        isAuthenticated ? styles.hide : styles.show
                     }`}
                 >
                     Log in
@@ -23,23 +30,22 @@ export default function Header({ isLoggedIn }) {
                 <Link
                     to="/register"
                     className={`${styles.signupButton} ${styles.textStyle} ${
-                        isLoggedIn ? styles.hide : styles.show
+                        isAuthenticated ? styles.hide : styles.show
                     }`}
                 >
                     Sign up
                 </Link>
-                <Link
-                    to="/home"
+                <div
                     onClick={handleLogout}
                     className={`${styles.logoutButton} ${styles.textStyle} ${
-                        isLoggedIn ? styles.show : styles.hide
+                        isAuthenticated ? styles.show : styles.hide
                     }`}
                 >
                     Log out
-                </Link>
+                </div>
                 <div
                     className={`${styles.profileBox} ${styles.textStyle} ${
-                        isLoggedIn ? styles.show : styles.hide
+                        isAuthenticated ? styles.show : styles.hide
                     }`}
                 >
                     <span>Hello!</span>
