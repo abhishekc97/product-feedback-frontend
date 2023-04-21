@@ -1,11 +1,22 @@
 import styles from "./Login.module.scss";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/userOperationsAPI";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+
+    const [formErrors, setFormErrors] = useState({
         email: "",
         password: "",
     });
@@ -16,8 +27,6 @@ export default function Login() {
             [event.target.name]: event.target.value,
         });
     }
-
-    const [formErrors, setFormErrors] = useState({ email: "", password: "" });
 
     function validateForm() {
         const errors = {};
@@ -39,13 +48,26 @@ export default function Login() {
 
     async function handleLogin(e) {
         e.preventDefault();
-        const isValid = validateForm();
-        if (isValid) {
+        const isValidForm = validateForm();
+        if (isValidForm) {
             // api to login
-            console.log("valid");
+            try {
+                let response = await loginUser(formData);
+                if (response.status === 200) {
+                    localStorage.setItem("token", response.data.token);
+                    setTimeout(() => {
+                        dispatch({ type: "login" });
+                        navigate("/");
+                    }, 1500);
+                }
+            } catch (error) {
+                toast.error("Could not login", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
         }
-        // redirect to /home
     }
+
     return (
         <div className={styles.loginWrapper}>
             <div className={styles.loginInnerWrapper}>
@@ -108,6 +130,7 @@ export default function Login() {
                     </form>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }
