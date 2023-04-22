@@ -13,7 +13,7 @@ export default function AddProductModal({
 }) {
     const [formData, setFormData] = useState({
         name: "",
-        category: "",
+        category: [],
         logoImageURL: "",
         productURL: "",
         description: "",
@@ -27,19 +27,39 @@ export default function AddProductModal({
         description: "",
     });
 
+    function prepareCategoryArray(inputString) {
+        const categoryArray = inputString
+            .split(",")
+            .map((category) => category.trim());
+        return categoryArray;
+    }
+
     function handleInputChange(event) {
-        setFormData({
-            ...formData,
-            [event.target.name]: event.target.value,
-        });
+        const { name, value } = event.target;
+        if (name === "category") {
+            const categoryArray = prepareCategoryArray(value);
+            setFormData({ ...formData, category: categoryArray });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     }
 
     function validateForm() {
         const errors = {};
+        let categoryArray = [];
+
+        if (Array.isArray(formData.category)) {
+            categoryArray = formData.category.map((category) =>
+                category.trim()
+            );
+        } else {
+            categoryArray = prepareCategoryArray(formData.category);
+        }
+
         if (!formData.name.trim()) {
             errors.name = "Name cannot be empty";
         }
-        if (!formData.category.trim()) {
+        if (categoryArray.length < 0) {
             errors.category = "Category cannot be empty";
         }
         if (!formData.logoImageURL.trim()) {
