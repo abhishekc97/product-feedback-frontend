@@ -61,20 +61,20 @@ export default function Product({
                 <div className={styles.left}>
                     <img
                         src={product.logoImageURL}
-                        alt={product.name}
+                        alt=""
                         className={styles.productLogo}
                     />
                 </div>
                 <div className={styles.center}>
                     <div className={styles.centerTop}>
-                        <span>{productLocal.name}</span>
+                        <span>{productLocal?.name}</span>
                     </div>
                     <div className={styles.centerMiddle}>
-                        <span>{productLocal.description}</span>
+                        <span>{productLocal?.description}</span>
                     </div>
                     <div className={styles.centerBottom}>
                         <div className={styles.productCategories}>
-                            {productLocal.category &&
+                            {productLocal?.category &&
                                 productLocal.category.map((category) => (
                                     <div
                                         className={styles.categoryBox}
@@ -105,7 +105,7 @@ export default function Product({
                         >
                             <div className={styles.upvoteLogo}></div>
                             <div className={styles.upvoteText}>
-                                {productLocal.upvoteCount}
+                                {productLocal?.upvoteCount}
                             </div>
                         </div>
                         <div className={styles.rightInnerBottom}>
