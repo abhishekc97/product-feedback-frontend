@@ -67,8 +67,8 @@ export default function Register() {
                 let response = await registerUser(formData);
                 if (response.status === 200) {
                     localStorage.setItem("token", response.data.token);
-                    toast.success("User registered!", {
-                        position: toast.POSITION.BOTTOM_RIGHT,
+                    toast.success("Registration successfull!", {
+                        position: toast.POSITION.TOP_CENTER,
                     });
                     setTimeout(() => {
                         navigate("/login");

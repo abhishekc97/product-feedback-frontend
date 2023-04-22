@@ -70,9 +70,10 @@
     right: 150px;
     width: 135px;
     height: 45px;
-    border: 1.7px solid #ffffff;
+    border: none;
     border-radius: 8px;
     background: none;
+    cursor: pointer;
 }
 
 .profileBox {

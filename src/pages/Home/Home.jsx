@@ -48,9 +48,6 @@ function Main({ isAuthenticated }) {
     }
 
     function handleRegisterSuccess() {
-        toast("Product added!", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-        });
         handleOpenLoginModal();
     }
 

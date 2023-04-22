@@ -58,11 +58,11 @@ export default function Login() {
                     setTimeout(() => {
                         dispatch({ type: "login" });
                         navigate("/");
-                    }, 1500);
+                    }, 1000);
                 }
             } catch (error) {
-                toast.error("Could not login", {
-                    position: toast.POSITION.BOTTOM_RIGHT,
+                toast.error("Could not login, please check credentials.", {
+                    position: toast.POSITION.TOP_CENTER,
                 });
             }
         }

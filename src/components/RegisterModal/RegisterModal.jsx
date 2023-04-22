@@ -72,8 +72,11 @@ export default function RegisterModal({
                 if (response.status === 200) {
                     localStorage.setItem("token", response.data.token);
                     setTimeout(() => {
+                        toast("Registration successfull!", {
+                            position: toast.POSITION.TOP_CENTER,
+                        });
                         handleRegisterSuccess();
-                    }, 1500);
+                    }, 1000);
                 }
             } catch (error) {
                 toast.error("Could not register.", {
