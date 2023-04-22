@@ -20,7 +20,7 @@ export async function updateProductDetails(id, body) {
         const reqUrl = `${URL}/api/products/update/${id}`;
         const result = await axios.put(reqUrl, body);
         if (result) {
-            return result.data;
+            return result;
         }
     } catch (error) {
         console.log(error);

@@ -10,7 +10,7 @@ import EditProductModal from "../EditProductModal/EditProductModal";
 export default function Product({
     product,
     isAuthenticated,
-    handleProductUpdated,
+    handleProductAddAndUpdate,
 }) {
     const productId = product._id;
     const [productLocal, setProductLocal] = useState(product);
@@ -124,11 +124,13 @@ export default function Product({
                                     onClose={() =>
                                         setShowEditProductModal(false)
                                     }
-                                    handleProductUpdated={handleProductUpdated}
+                                    handleProductAddAndUpdate={
+                                        handleProductAddAndUpdate
+                                    }
                                 />
                             )}
                             <div className={styles.commentCount}>
-                                {productLocal.comments.length}
+                                {productLocal?.comments?.length}
                                 <div className={styles.commentCountLogo}></div>
                             </div>
                         </div>
@@ -154,7 +156,7 @@ export default function Product({
                         ></button>
                     </div>
                     <div className={styles.commentsContainer}>
-                        {productLocal.comments.map((comment, index) => (
+                        {productLocal?.comments?.map((comment, index) => (
                             <div className={styles.commentRow} key={index}>
                                 <div className={styles.commentEllipse}></div>
                                 <div className={styles.commentText}>

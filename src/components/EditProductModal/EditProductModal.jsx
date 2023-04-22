@@ -1,19 +1,22 @@
-import { useState } from "react";
-import { createProduct } from "../../api/productsAPI";
+import { useEffect, useState } from "react";
+import { updateProductDetails, getProductById } from "../../api/productsAPI";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import styles from "./AddProductModal.module.css";
+import styles from "./EditProductModal.module.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function AddProductModal({
+export default function EditProductModal({
+    product,
     show,
     onClose,
     handleProductAddAndUpdate,
 }) {
+    const productId = product._id;
+
     const [formData, setFormData] = useState({
         name: "",
-        category: "",
+        category: [],
         logoImageURL: "",
         productURL: "",
         description: "",
@@ -27,19 +30,50 @@ export default function AddProductModal({
         description: "",
     });
 
-    function handleInputChange(event) {
-        setFormData({
-            ...formData,
-            [event.target.name]: event.target.value,
-        });
+    function prepareCategoryArray(inputString) {
+        const categoryArray = inputString
+            .split(",")
+            .map((category) => category.trim());
+        return categoryArray;
     }
+
+    function handleInputChange(event) {
+        const { name, value } = event.target;
+        if (name === "category") {
+            const categoryArray = prepareCategoryArray(value);
+            setFormData({ ...formData, category: categoryArray });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
+    }
+
+    async function getProductDetails() {
+        const foundDetails = await getProductById(productId);
+        if (foundDetails) {
+            setFormData(foundDetails);
+        }
+    }
+
+    useEffect(() => {
+        getProductDetails();
+    }, []);
 
     function validateForm() {
         const errors = {};
+        let categoryArray = [];
+
+        if (Array.isArray(formData.category)) {
+            categoryArray = formData.category.map((category) =>
+                category.trim()
+            );
+        } else {
+            categoryArray = prepareCategoryArray(formData.category);
+        }
+
         if (!formData.name.trim()) {
             errors.name = "Name cannot be empty";
         }
-        if (!formData.category.trim()) {
+        if (categoryArray.length < 0) {
             errors.category = "Category cannot be empty";
         }
         if (!formData.logoImageURL.trim()) {
@@ -59,31 +93,23 @@ export default function AddProductModal({
         e.preventDefault();
         const isValid = validateForm();
         if (isValid) {
-            // make the API call
             try {
-                let response = await createProduct(formData);
+                let response = await updateProductDetails(productId, formData);
                 if (response.status === 200) {
                     setTimeout(() => {
                         handleProductAddAndUpdate();
-                        toastSuccessAlert();
+                        toast.success("Product edited!", {
+                            position: toast.POSITION.BOTTOM_RIGHT,
+                        });
                         onClose();
-                    }, 1500);
+                    }, 1000);
                 }
             } catch (error) {
-                toastFailureAlert();
+                toast.error("Could not edit the product.", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
             }
         }
-    }
-    function toastSuccessAlert() {
-        toast.success("Product added!", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-        });
-    }
-
-    function toastFailureAlert() {
-        toast.error("Could not add the new product.", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-        });
     }
 
     // MUI style
@@ -107,14 +133,14 @@ export default function AddProductModal({
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <div className={styles.addProduct}>
+                <div className={styles.editProduct}>
                     <div className={styles.left}>
                         <div className={styles.leftHeadline}>
-                            Add your product
+                            Edit your product
                         </div>
                         <form
                             onSubmit={handleSubmit}
-                            className={styles.addProductForm}
+                            className={styles.editProductForm}
                         >
                             <div className={styles.inputRow}>
                                 <input
@@ -153,7 +179,7 @@ export default function AddProductModal({
                             <div className={styles.inputRow}>
                                 <input
                                     type="text"
-                                    placeholder="Add logo url"
+                                    placeholder="Edit logo url"
                                     className={styles.inputBox}
                                     name="logoImageURL"
                                     value={formData.logoImageURL}
@@ -187,7 +213,7 @@ export default function AddProductModal({
                             <div className={styles.inputRow}>
                                 <input
                                     type="text"
-                                    placeholder="Add description"
+                                    placeholder="Edit description"
                                     className={styles.inputBox}
                                     name="description"
                                     value={formData.description}
@@ -205,7 +231,7 @@ export default function AddProductModal({
                                 type="submit"
                                 className={styles.submitButton}
                             >
-                                + Add
+                                Save
                             </button>
                         </form>
                     </div>
